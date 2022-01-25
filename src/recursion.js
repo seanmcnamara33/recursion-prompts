@@ -891,7 +891,6 @@ var replaceKeysInObj = function(obj, oldKey, newKey) {
       replaceKeysInObj(obj[item], oldKey, newKey)
     }
   }
-  console.log(obj)
   return obj;
 };
 
@@ -900,7 +899,80 @@ var replaceKeysInObj = function(obj, oldKey, newKey) {
 // Example: 0, 1, 1, 2, 3, 5, 8, 13, 21, 34.....
 // fibonacci(5); // [0,1,1,2,3,5]
 // Note: The 0 is not counted.
+
+// generate an array of fibonacci numbers starting from 1 and going until n
+
+// tests already made
+
+// I - number n
+// O - array
+// C - must use recursion
+// E - first number 0 is not counted, zero/negative numbers return null
+
+// High Level Strategy - fib numbers are a sum of the prior two numbers. iterate over n
+// and push to array the sum of n and n - 1. For every new n, recursively call function
+
+// Pseudocode - inner function method (not viable for tests)
+// edge case
+// if n is zero/negative
+  // return null
+// create result variable and populate with zero at first index
+// create inner function and pass in n and result
+  // base cases
+  // if result length is 1
+    // push 1 to result
+  // if n is equal to 1
+    // return
+  // recursive case
+  // if n is greater than 1
+    // add result at last and second to last indices together and push to result
+    // recursively call function with n - 1
+// call inner function with n and result
+// return result
+
+// var fibonacci = function(n) {
+//   if (n <= 0) {
+//     return null;
+//   }
+//   var result = [0];
+//   var innerFunction = function(n, result) {
+//     if (result.length === 1) {
+//       result.push(1);
+//     }
+//     if (n === 1) {
+//       return;
+//     }
+//     if (n > 1) {
+//       result.push(result[result.length - 1] + result[result.length - 2]);
+//       innerFunction(n - 1, result);
+//     }
+//   }
+//   innerFunction(n, result);
+//   return result;
+// };
+
+// Pseudocode - 'Pure' Recursion
+// edge case
+// if n is negative or zero
+  // return null
+// if n is equal to 1
+  // return [0, 1] array
+// if n is greater than 1
+  // recursively call fibonacci with n - 1 passed in and set equal to result variable
+  // push result at last index and result at second to last index added together into result
+  // return result
 var fibonacci = function(n) {
+  if (n <= 0) {
+  return null;
+  }
+  if (n === 1) {
+    return [0, 1];
+  }
+  if (n > 1) {
+    var result = fibonacci(n - 1);
+    result.push(result[result.length - 1] + result[result.length - 2]);
+    return result;
+  }
 };
 
 // 26. Return the Fibonacci number located at index n of the Fibonacci sequence.
@@ -908,18 +980,92 @@ var fibonacci = function(n) {
 // nthFibo(5); // 5
 // nthFibo(7); // 13
 // nthFibo(3); // 2
+
+// generate fibonacci number at n and return it
+
+// tests already written
+
+// I - number n
+// O - number
+// C - must use recursion
+// E - return null for negative numbers
+
+// High Level Strategy - create base cases for when n is 0 and n is one (these return 0 and 1)
+// if n is greater than one, return fib n + fib n - 1
+
+// Pseudocode
+// edge case
+// if n is negative
+  // return null
+// base cases
+// if n is 0
+  // return 0
+// if n is 1
+  // return 1
+// recursive case
+// if n is greater than 1
+  // return function call n - 1 + function call n - 2
+
 var nthFibo = function(n) {
+  if (n < 0) {
+    return null;
+  }
+  if (n === 0) {
+    return 0;
+  }
+  if (n === 1) {
+    return 1;
+  }
+  if (n > 1) {
+    return nthFibo(n - 1) + nthFibo(n - 2);
+  }
 };
 
 // 27. Given an array of words, return a new array containing each word capitalized.
 // var words = ['i', 'am', 'learning', 'recursion'];
 // capitalizedWords(words); // ['I', 'AM', 'LEARNING', 'RECURSION']
+
+// capitalize every word in an array recursively
+
+// tests already written
+
+// I - array of uncapitalized words
+// O - array of capitalized words
+// C - must use recursion
+// E - None
+
+// High Level Strategy - base case is capitalizing array at zero and return, recursive case
+// is slicing array from 1 and passing that as array to function
+
+// Pseudocode
+// base case
+// if array length is one
+  // uppercase the word and return in an array (this decides form of final return)
+// if array length is not one
+  // create var and set equal to recursive call of function with array sliced from 0 to len - 1
+  // (this returns last element capitalized)
+  // now push last element of array capitalized into var
+  // return var
 var capitalizeWords = function(array) {
+  if (array.length === 1) {
+    return [array[0].toUpperCase()];
+  } else {
+    var caps = capitalizeWords(array.slice(0, -1));
+    caps.push(array.slice(array.length - 1)[0].toUpperCase());
+    return caps;
+  }
 };
 
 // 28. Given an array of strings, capitalize the first letter of each index.
 // capitalizeFirst(['car','poop','banana']); // ['Car','Poop','Banana']
 var capitalizeFirst = function(array) {
+  if (array.length === 1) {
+    return [array[0].charAt(0).toUpperCase() + array[0].slice(1)];
+  } else {
+    var caps = capitalizeFirst(array.slice(0, -1));
+    caps.push(array.slice(array.length - 1)[0].charAt(0).toUpperCase() + array.slice(array.length - 1)[0].slice(1));
+    return caps;
+  }
 };
 
 // 29. Return the sum of all even numbers in an object containing nested objects.
@@ -931,17 +1077,117 @@ var capitalizeFirst = function(array) {
 //   e: {e: {e: 2}, ee: 'car'}
 // };
 // nestedEvenSum(obj1); // 10
+
+// iterate through object and check to see if value in property is an even number, if it is
+// add it to a sum variable and return
+
+// tests already written
+
+// I - object of nested objects
+// O - number
+// C - must use recursion
+// E - none
+
+// High Level Strategy - iterate over object. for base case, check to see if current items value is a number AND is even
+// if so, add that number to a sum variable. Else if current items value is an object and not
+// an array, call recursive function with current item passed in
+
+// Pseudocode
+// create sum variable
+// iterate over obj
+  // base case
+  // if current items value is of type number && is even
+    // add value to sum
+  // else if current items value is an object and not an array
+    // add value of recursive call of function to sum
+// return sum
 var nestedEvenSum = function(obj) {
+  var sum = 0;
+  for (var item in obj) {
+    if (typeof obj[item] === 'number' && obj[item] % 2 === 0) {
+      sum += obj[item];
+    } else if (typeof obj[item] === 'object' && !Array.isArray(obj[item])) {
+      sum += nestedEvenSum(obj[item]);
+    }
+  }
+  return sum;
 };
 
 // 30. Flatten an array containing nested arrays.
 // flatten([1,[2],[3,[[4]]],5]); // [1,2,3,4,5]
+
+// iterate through an array of arrays and if the type is not array, add it to a result
+
+// tests already written
+
+// I - array of arrays
+// O - flat array
+// C - must use recursion, can't use native js flatten
+// E - empty array?
+
+// High Level Strategy - create flat arr var, iterate over array, if current item is number
+// push it to flat arr, if item is an array, recursively call function with current item
+// passed in
+
+// Pseudocode
 var flatten = function(array) {
+  // create flat arr var
+  // iterate over arr
+    // if type of current item is NOT an array
+      // set flat equal to flat concat current item
+    // else if current item IS an array
+      // recursively call function with current item passed in and concat it with flat
+      // and set flat equal to it
+  // return flat arr
+  var flat = [];
+  for (var item of array) {
+    if (!Array.isArray(item)) {
+      flat = flat.concat(item);
+    } else {
+      flat = flat.concat(flatten(item));
+    }
+  }
+  return flat;
 };
 
 // 31. Given a string, return an object containing tallies of each letter.
 // letterTally('potato'); // {p:1, o:2, t:2, a:1}
-var letterTally = function(str, obj) {
+
+// go through a string and count the number of times letters occur, recursively
+
+// tests already written
+
+// I - string, obj
+// O - object
+// C - must use recursion
+// E - none
+
+// High Level Strategy - base case is string length is zero, recursive case is if string length
+// is not zero. When string is 0 (base case), add char at 0 in string to object as key and set
+// its value equal to 1. If current char exists in object already, increment its value by one.
+
+// Pseudocode
+// create result obj
+// iterate over string
+  // base case
+  // if string length is 1
+    // create property in object with current char is key and 1 as value
+  // if current key exists in object already
+    // increment its value by one
+  // recursive case
+  // if string length is greater than 1
+    // call function with str sliced from 1 to end and obj passed in
+var letterTally = function(str, obj = {}) {
+  if (str.length === 0) {
+    return;
+  }
+  if (!obj[str[0]]) {
+    obj[str[0]] = 1;
+  } else if (obj[str[0]]) {
+    obj[str[0]]++;
+  }
+  letterTally(str.slice(1), obj);
+  return obj;
 };
 
 // 32. Eliminate consecutive duplicates in a list. If the list contains repeated
