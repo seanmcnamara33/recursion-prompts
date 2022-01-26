@@ -1195,32 +1195,206 @@ var letterTally = function(str, obj = {}) {
 // elements should not be changed.
 // compress([1,2,2,3,4,4,5,5,5]) // [1,2,3,4,5]
 // compress([1,2,2,3,4,4,2,5,5,5,4,4]) // [1,2,3,4,2,5,4]
+
+// reduce the array until there are no duplicates of items one after the other
+// there can be duplicates in the array, just not one after the other
+
+// tests already written
+
+// I - array
+// O - array w/ out running duplicates
+// C - must use recursion, can't mutate input array
+// E - none
+
+// High Level Strategy - base case is when array is empty - return
+// recursive case is when array length is greater than 0
+// check to see if last item in result is equal to first item in array
+// if so, dont add it to result
+// if last item in result and first item in array are NOT equal, add it to result
+
+// Pseudocode
+// base case
+// list len less than two
+  // return list (it is full built)
+// positive recursive case
+  // create an array item out of list[0] and concat with recursive call of list w/ tail passed
+// neg recursive case
+  // call function recursively with tail of list passed in
+
 var compress = function(list) {
+  if (list.length <= 1) {
+    return list;
+  } else if (list[0] !== list[1]) {
+    return [list[0]].concat(compress(list.slice(1)));
+  } else {
+    return compress(list.slice(1));
+  }
 };
 
 // 33. Augment every element in a list with a new value where each element is an array
 // itself.
 // augmentElements([[],[3],[7]], 5); // [[5],[3,5],[7,5]]
+
+// add an element to every array inside of an array
+
+// Tests already written
+
+// I - array of arrays, element
+// O - array of arrays
+// C - must use recursion
+// E - none
+
+// High Level Strategy - add inputted element to every array in the input array
+
+// Pseudocode
+// base case
+// when array length is 0
+  // return array
+// recursive case
+  // push aug into array at 0
+  // call function is first index sliced off
+// return array
 var augmentElements = function(array, aug) {
+  if (array.length < 1) {
+    return array;
+  } else {
+    array[0].push(aug);
+    augmentElements(array.slice(1), aug);
+  }
+  return array;
 };
 
 // 34. Reduce a series of zeroes to a single 0.
 // minimizeZeroes([2,0,0,0,1,4]) // [2,0,1,4]
 // minimizeZeroes([2,0,0,0,1,0,0,4]) // [2,0,1,0,4]
+
+// like easy version of compress - check to see if number after zero is also a zero, if it is
+// remove it
+
+// tests already written
+
+// I - array
+// O - array
+// C - must use recursion, shouldint mutate input
+// E - none
+
+// High Level Strategy - recurse down array until it is empty for base case
+// along the way, check to see if current first item in array is equal to current second item
+// if it isnt (or if it is not 0), wrap it in an array and concat it with recursive function call
+// with array sliced from 1 as input. If it IS a 0 and it IS equal to the number to the right of it
+// call function recursively WITHOUT concatting (this skips the 0)
+
+// Pseudocode
+// base case
+// if array length is less than 1
+  // return array (empty)
+// else if array at 0 is not equal to array at 1 OR array at 0 is not equal to 0
+  // wrap array at 0 in an array and concat it with recursive function call with array sliced from
+  // 1 entered as input and return
+// else if array at 0 IS equal to array at 1
+  // recursively call function with array sliced from 1 as input and return
+
 var minimizeZeroes = function(array) {
+  if (array.length <= 1) {
+    return array;
+  } else if (array[0] !== array[1] || array[0] !== 0) {
+    return [array[0]].concat(minimizeZeroes(array.slice(1)));
+  } else {
+    return minimizeZeroes(array.slice(1));
+  }
 };
+// console.log(minimizeZeroes([1, 2, 2, 2, 3, 0, 0, 4, 0, 0]));
 
 // 35. Alternate the numbers in an array between positive and negative regardless of
 // their original sign. The first number in the index always needs to be positive.
 // alternateSign([2,7,8,3,1,4]) // [2,-7,8,-3,1,-4]
 // alternateSign([-2,-7,8,3,-1,4]) // [2,-7,8,-3,1,-4]
+
+// take an array and alternate the sign with first index always being positive
+  // pos, neg, pos, neg, etc...
+
+// Tests already written
+
+// I - array
+// O - array
+// C - must use recursion, shouldnt mutate input array
+// E - none
+
+// High Level Strategy - make every element positive. Base case is when array length is zero
+// recursive case is whenever array length is greater than zero
+// if current index is even or zero, it stays positive
+// if current index is odd, it becomes negative
+
+// Pseudocode
+// create counter and set equal to array length
+// if array at 0 is negative, make it positive
+// base case
+// if array length is zero
+  // return empty array
+// if counter modulo two is not zero AND array at 0 is positive
+  // recursively call function with array sliced from 1 and concat with array at 0 inversed
+// if counter is even AND array at 0 is negative
+  // recursively call function with array sliced from 1 and concat with array at 0 inversed
+// else if sign is correct for index position
+  // recursively call function with array sliced from 1 and concat with array at 0
+
 var alternateSign = function(array) {
+  var counter = array.length;
+  if (array.length === 0) {
+    return [];
+  }
+  else if (counter % 2 !== 0 && array[0] > 0) {
+    return [-array[0]].concat(alternateSign(array.slice(1)));
+  }
+  else if (counter % 2 === 0 && array[0] < 0) {
+    return [-array[0]].concat(alternateSign(array.slice(1)));
+  } else {
+    return [array[0]].concat(alternateSign(array.slice(1)));
+  }
 };
 
 // 36. Given a string, return a string with digits converted to their word equivalent.
 // Assume all numbers are single digits (less than 10).
 // numToText("I have 5 dogs and 6 ponies"); // "I have five dogs and six ponies"
+
+// recursively convert numbers into text format in a string
+
+// tests already written
+
+// I - string with numbers in number form
+// O - string with numbers in text form
+// C - must use recursion
+// E - none
+
+// High Level Strategy - base case is if string length is 0 -- return empty string (or not)
+// recursive case is if type of current substring in string is number -- convert string to
+// text format. Second recursive case is if type of current substring in string is NOT a
+// number - recursively call function with string sliced
+
+// Pseudocode
+// create array with number being the index position of its text counterpart
+// base case
+// if string length is zero
+  // return empty string
+// recursive case 1
+// if current char in string is a number
+  // create alias for the text value of the number and use number as index in textNums to get text
+  // return textNum + recursive call of slice from 1 of string passed in
+// recursive case 2
+// if current char in string  is NOT a number
+  // return current char + recursive call with slice from 1 of string passed in
+
 var numToText = function(str) {
+  var textNums = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
+  if (str.length === 0) {
+    return '';
+  }
+  if (str[0] !== ' ' && !isNaN(Number(str[0]))) {
+    var textNum = [textNums[Number(str[0])]]
+    return textNum + numToText(str.slice(1));
+  } else {
+    return str[0] + numToText(str.slice(1));
+  }
 };
 
 
