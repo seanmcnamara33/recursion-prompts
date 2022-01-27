@@ -1401,20 +1401,86 @@ var numToText = function(str) {
 // *** EXTRA CREDIT ***
 
 // 37. Return the number of times a tag occurs in the DOM.
-var tagCount = function(tag, node) {
+
+// iterate through DOM and find how many times a particular element appears
+
+// tests already written
+
+// I - string (tag), and node
+// O - number
+// C - must use recursion
+// E - none
+
+// High Level Strategy - check if current nodes tag name is equal to tag, if so, increment counter
+// by one. Then, check to see if current node has children, if it does, recursively call function
+// with current nodes children passed in for node and tag the same
+
+// Pseudocode
+// add default value of document to node parameter in functions parameter list
+// make tag uppercase
+// create result variable and set to 0
+// if the currend nodes name is equal to the passed in tag
+  // increment result variable
+// iterate over nodes children with forEach and pass each child in
+  // recursively call function with same tag and current child passed in and add it to result
+// return result
+
+var tagCount = function(tag, node = document) {
+  tag = tag.toUpperCase();
+  var result = 0;
+  if (node.nodeName === tag) {
+    result++;
+  }
+  node.childNodes.forEach(function(child) {
+     result += tagCount(tag, child);
+  });
+  return result;
 };
 
 // 38. Write a function for binary search.
 // var array = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15];
 // binarySearch(array, 5) // 5
 // https://www.khanacademy.org/computing/computer-science/algorithms/binary-search/a/binary-search
-var binarySearch = function(array, target, min, max) {
+var binarySearch = function(array, target, min = 0, max = array.length - 1) {
+  var mid = Math.floor((min + max) / 2);
+
+  if (min > max) {
+    return null;
+  }
+  if (array[mid] === target) {
+    return mid;
+  }
+  if (array[mid] > target) {
+    return binarySearch(array, target, min, mid - 1)
+  }
+  if (array[mid] < target) {
+    return binarySearch(array, target, mid + 1, max);
+  }
 };
 
 // 39. Write a merge sort function.
 // mergeSort([34,7,23,32,5,62]) // [5,7,23,32,34,62]
 // https://www.khanacademy.org/computing/computer-science/algorithms/merge-sort/a/divide-and-conquer-algorithms
 var mergeSort = function(array) {
+  var merge = function(arr1, arr2) {
+    var sorted = [];
+    while(arr1.length && arr2.length) {
+      if (arr1[0] < arr2[0]) {
+        sorted.push(arr1.shift());
+      } else {
+        sorted.push(arr2.shift());
+      }
+    }
+    return sorted.concat(arr1.slice().concat(arr2.slice()));
+  }
+  var mid = Math.floor(array.length/ 2);
+
+  if (array.length <= 1) {
+    return array;
+  }
+  var left = mergeSort(array.slice(0, mid));
+  var right = mergeSort(array.slice(mid));
+  return merge(left, right);
 };
 
 // 40. Deeply clone objects and arrays.
@@ -1422,5 +1488,47 @@ var mergeSort = function(array) {
 // var obj2 = clone(obj1);
 // console.log(obj2); // {a:1,b:{bb:{bbb:2}},c:3}
 // obj1 === obj2 // false
+
+// copy the data inside of the object/array into a new object/array
+// this cloned object/array will point to a different place in memory than the original copy does
+// (shallow cloning would point to the same place in memory)
+
+// Tests Already Written
+
+// I - array/object
+// O - array/object
+// C - must use recursion, can't use native JSON methods
+// E - none
+
+// High Level Strategy - base case is if type of input is not object and is not undefined
+// recursive case is if input is an array or an object - if so - iterate over the input
+// and recursively call function with current items value passed in - create a property in
+// current obj/array and set it equal to recursive call
+
+// Pseudocode
+// check if type of input is NOT an object and is NOT undefined
+// create result variable
+// check to see if input is an array
+  // if so - set result to empty array
+// check to see if input is NOT an array but is an object
+  // if so - set result to empty object
+// iterate over input with for in
+  // create a property in result obj/arr and set its value as function recursively called with
+  // value of current property in input obj/array passed in
+// return result
+
 var clone = function(input) {
-};
+  if (typeof input !== 'object' && input !== undefined) {
+    return input;
+  }
+  var result;
+  if (Array.isArray(input)) {
+    result = [];
+  } else {
+    result = {};
+  }
+  for (var item in input) {
+    result[item] = clone(input[item]);
+  }
+  return result;
+}
